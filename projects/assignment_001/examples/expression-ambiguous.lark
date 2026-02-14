@@ -1,0 +1,28 @@
+?exp: INT | FLOAT | NAMED_CONSTANT
+    | exp BINOP exp    
+    | variable
+    | UNOP exp    
+    | BUILTIN_FUN1 "(" exp ")"
+    | BUILTIN_FUN2 "(" exp "," exp ")"     
+    | "(" exp ")"
+
+
+variable: ID | ID "[" exp "]"
+
+INT:     // Assignment 1.1
+FLOAT:   // Assignment 1.1
+
+ID.-1:         /[a-zA-Z][a-zA-Z0-9_]*/
+
+NAMED_CONSTANT: "pi" 
+BUILTIN_FUN1:   "sin" | "arcsin" | "cos" | "arccos" | "tan" | "exp" | "sqrt"
+BUILTIN_FUN2:   "arctan2" 
+
+BINOP: "**" | "==" | "<"| "*"|"/"|"&"|"xor"|"^"|"+"|"-"|"|"|"%"|"<>"|"swap"
+
+UNOP:  "!" | "not" // Logical negation
+    |  "~" // Binary negation
+    |  "-" // Unary minus
+
+WHITESPACE: /[\ \t\n\r\f]+/
+%ignore WHITESPACE
