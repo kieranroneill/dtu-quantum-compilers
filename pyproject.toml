@@ -3,7 +3,7 @@ line-length = 120
 target-version = ['py310']
 
 [tool.isort]
-known_first_party = ["dtu-quantum-compilers"]
+known_first_party = ["dtu_quantum_compilers"]
 profile = "black"
 
 [tool.pylint."messages control"]

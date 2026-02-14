@@ -6,18 +6,16 @@ repos:
     hooks:
       - id: isort
         name: isort
-        entry: isort .
+        entry: isort
         language: python
+        types: [python]
         additional_dependencies:
           - isort==6.0.1
-        pass_filenames: false
-        always_run: true
 
       - id: black
         name: black
-        entry: black .
+        entry: black
         language: python
+        types: [python]
         additional_dependencies:
           - black==25.9.0
-        pass_filenames: false
-        always_run: true
