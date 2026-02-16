@@ -28,8 +28,8 @@ This repo is a Python-based monorepo that uses the following structure:
 
 ```text
 .
-├─ projects
-│   ├── <project_name>
+├─ projects/
+│   ├── <project_name>/
 │   │   ├── LICENSE
 │   │   ├── main.py             <-- project entrypoint
 │   │   ├── Makefile            <-- project-level scripts
@@ -68,7 +68,7 @@ $ make install
 
 ### 2.3. Project-level setup
 
-FOr each project in the `projects/` directory, there will be a separate `Makefile` that can be used to install the project-specific dependencies and tools.
+For each project in the `projects/` directory, there will be a separate `Makefile` that can be used to install the project-specific dependencies and tools.
 
 Refer to the `README.md` of each project for more information.
 

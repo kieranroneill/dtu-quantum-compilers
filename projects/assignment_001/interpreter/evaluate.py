@@ -19,7 +19,6 @@ def evaluate(node: Tree | Token) -> int | float:
     result : int | float
         The evaluated value of the expression.
     """
-
     # if we have a token, we evaluate it and return the result
     if isinstance(node, Token):
         return evaluate_constant(node)
