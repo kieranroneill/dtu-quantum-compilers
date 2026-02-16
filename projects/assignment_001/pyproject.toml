@@ -1,3 +1,4 @@
+[project]
 name = "assignment_001"
 version = "1.0.0"
 description = "Assignment 001: A lexer, parser, and interpreter for CQ-expressions."

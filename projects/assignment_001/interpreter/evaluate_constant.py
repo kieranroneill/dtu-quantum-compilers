@@ -1,5 +1,5 @@
-from errors.compile_error import CompileError
 from lark.lexer import Token
+from libs.errors.compile_error import CompileError
 
 
 def evaluate_constant(token: Token) -> int | float:

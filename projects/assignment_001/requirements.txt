@@ -1,2 +1,3 @@
+-e ../libs
 lark==1.3.1
 pytest==8.4.2

@@ -10,7 +10,7 @@ def main():
         sys.exit(1)
 
     path = sys.argv[1]
-    source = libs.read_file(path)
+    source = libs.utilities.read_file(path)
     result = interpreter.run(source)
 
     print("output:", result)

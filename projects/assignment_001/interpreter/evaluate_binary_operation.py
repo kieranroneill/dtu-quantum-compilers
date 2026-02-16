@@ -1,4 +1,4 @@
-from errors.compile_error import CompileError
+from libs.errors.compile_error import CompileError
 
 
 def evaluate_binary_operation(operator: str, a, b):
