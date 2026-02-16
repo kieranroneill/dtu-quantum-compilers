@@ -1,21 +1,19 @@
-from interpreter.eval_ast import eval_ast
-from lark import Lark
-from libs.read_file import read_file
+import sys
 
-
-def compile_file(parser: Lark, file: str):
-    src = read_file(file)
-    ast = parser.parse(src)
-    result = eval_ast(ast)
-
-    print("output:", result)
+import interpreter
+import libs
 
 
 def main():
-    parser = Lark.open("grammar/expression-ambiguous.lark", start="exp")
+    if len(sys.argv) != 2:
+        print("usage: python3 main.py <path>")
+        sys.exit(1)
 
-    # example 1.3
-    compile_file(parser, "examples/1-3.cq")
+    path = sys.argv[1]
+    source = libs.read_file(path)
+    result = interpreter.run(source)
+
+    print("output:", result)
 
 
 if __name__ == "__main__":
