@@ -16,4 +16,4 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["interpreter*"]
+include = ["interpreter_v1*"]

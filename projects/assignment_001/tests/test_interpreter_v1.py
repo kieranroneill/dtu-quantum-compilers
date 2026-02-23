@@ -1,4 +1,4 @@
-import interpreter
+import interpreter_v1 as interpreter
 
 
 def test_simple_expressions():
