@@ -30,18 +30,22 @@ This repo is a Python-based monorepo that uses the following structure:
 .
 ├─ projects/
 │   ├── <project_name>/
+│   │   ├── src/                <-- Project source code.
+│   │   │   └── ...
+│   │   ├── tests/              <-- Project unit tests.
+│   │   │   └── ...
 │   │   ├── LICENSE
-│   │   ├── main.py             <-- project entrypoint
-│   │   ├── Makefile            <-- project-level scripts
-│   │   ├── pyproject.toml      <-- project-level configuration file
+│   │   ├── main.py             <-- Project entrypoint (optional).
+│   │   ├── Makefile            <-- Project-level scripts.
+│   │   ├── pyproject.toml      <-- Project-level configuration file.
 │   │   ├── README.md
-│   │   ├── requirements.txt    <-- project-level dependencies
+│   │   ├── requirements.txt    <-- Project-level dependencies.
 │   │   └── ...
 │   └── ...
-├── dev-requirements.txt        <-- root-level Python dependencies
-├── Makefile                    <-- root-level scripts
-├── pip-requirements.txt        <-- defines the pip version
-├── pyproject.toml              <-- root-level configuration file
+├── dev-requirements.txt        <-- Root-level Python dependencies.
+├── Makefile                    <-- Root-level scripts.
+├── pip-requirements.txt        <-- Defines the pip version.
+├── pyproject.toml              <-- Root-level configuration file.
 ├── README.md
 └── ...
 ```
@@ -78,9 +82,10 @@ Refer to the `README.md` of each project for more information.
 
 ### 3.1. Projects
 
-| Name                                                                                                                   | Description                                                           |
-|------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------|
-| [`assignment_001`](https://github.com/kieranroneill/dtu-quantum-compilers/blob/main/projects/assignment_001/README.md) | Assignment 001: A lexer, parser, and interpreter for CQ-expressions.m |
+| Name                                                    | Description                                                            |
+|---------------------------------------------------------|------------------------------------------------------------------------|
+| [`assignment_001`](./projects/assignment_001/README.md) | Assignment 001: A lexer, parser, and interpreter for CQ-expressions.   |
+| [`assignment_002`](./projects/assignment_002/README.md) | Assignment 002: Write a type checker for single-procedure CQ programs. |
 
 ### 3.2. Useful commands
 

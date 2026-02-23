@@ -9,7 +9,7 @@
 </h1>
 
 <p align="center">
-  Write a type checker for single-procedure CQ programs
+  Write a type checker for single-procedure CQ programs.
 </p>
 
 ---
