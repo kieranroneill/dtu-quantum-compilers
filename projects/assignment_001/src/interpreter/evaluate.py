@@ -1,8 +1,9 @@
-from interpreter.evaluate_binary_operation import evaluate_binary_operation
-from interpreter.evaluate_constant import evaluate_constant
 from lark.lexer import Token
 from lark.tree import Tree
 from libs.errors.compile_error import CompileError
+
+from .evaluate_binary_operation import evaluate_binary_operation
+from .evaluate_constant import evaluate_constant
 
 
 def evaluate(node: Tree | Token) -> int | float:

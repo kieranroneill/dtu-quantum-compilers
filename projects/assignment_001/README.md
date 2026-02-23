@@ -20,7 +20,7 @@
 * [2. Usage](#-2-usage)
   - [2.1. Requirements](#21-requirements)
   - [2.2. Setup](#22-setup)
-  - [2.3. Run](#23-run)
+  - [2.3. Run Tests](#23-run-tests)
 * [3. Appendix](#-3-appendix)
   - [3.1. Useful commands](#31-useful-commands)
 * [4. License](#-4-license)
@@ -49,11 +49,11 @@ $ make install
 
 <sup>[Back to top ^][table-of-contents]</sup>
 
-### 2.3. Run
+### 2.3. Run Tests
 
-1. Install the root-level dependencies and tools:
+1. Runs the unit tests located in the `tests/` directory:
 ```bash
-$ make run
+$ make test
 ```
 
 <sup>[Back to top ^][table-of-contents]</sup>
@@ -65,7 +65,6 @@ $ make run
 | Name              | Description                                    |
 |-------------------|------------------------------------------------|
 | `make install`    | Installs dependencies from `requirements.txt`. |
-| `make run`        | Runs the Python code from `main.py`.           |
 | `make test`       | Runs unit tests.                               |
 
 <sup>[Back to top ^][table-of-contents]</sup>

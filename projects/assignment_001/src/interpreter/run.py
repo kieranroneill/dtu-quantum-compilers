@@ -1,5 +1,6 @@
-from interpreter.evaluate import evaluate
 from lark import Lark
+
+from .evaluate import evaluate
 
 
 def run(src: str) -> int | float:
@@ -11,7 +12,7 @@ def run(src: str) -> int | float:
     Returns:
         int | float: The result of the parsed expression.
     """
-    parser = Lark.open("expression.lark", start="exp")
+    parser = Lark.open("expression.lark", rel_to=__file__, start="exp")
     ast = parser.parse(src)
 
     return evaluate(ast)

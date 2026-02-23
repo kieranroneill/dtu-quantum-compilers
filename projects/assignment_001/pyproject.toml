@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "assignment_001"
 version = "1.0.0"
@@ -5,3 +9,11 @@ description = "Assignment 001: A lexer, parser, and interpreter for CQ-expressio
 authors = [{ name = "Kieran O'Neill", email = "zcd890@alumni.ku.dk" }]
 readme = "README.md"
 requires-python = ">=3.10.12"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["interpreter*"]
