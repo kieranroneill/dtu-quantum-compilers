@@ -28,5 +28,7 @@ def test_ambiguous_expressions():
 
 if __name__ == "__main__":
     test_simple_expressions()
+    test_complex_expressions()
+    test_ambiguous_expressions()
 
     print("✅ passed")
