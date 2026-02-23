@@ -35,19 +35,19 @@ def evaluate(node: Tree | Token) -> int | float:
     if len(children) == 1:
         return evaluate(children[0])
 
-    # binary operations should have three children: "exp binop exp"
+    # binary operations should have three children: "exp op exp"
     if len(children) == 3:
         left, center, right = children
 
         # when there is a binary operator in the middle
-        if isinstance(center, Token) and center.type == "BINOP":
+        if isinstance(center, Token) and center.type in {"PE", "MD", "AS", "CMP", "BINOP"}:
             operator = center.value
             a = evaluate(left)
             b = evaluate(right)
 
             return evaluate_binary_operation(operator, a, b)
 
-        # handle when there is a parenthesized expression
+        # handle when there is a parenthesised expression
         if isinstance(left, Token) and left.value == "(" and isinstance(right, Token) and right.value == ")":
             return evaluate(center)
 

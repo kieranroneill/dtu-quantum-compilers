@@ -11,7 +11,7 @@ def run(src: str) -> int | float:
     Returns:
         int | float: The result of the parsed expression.
     """
-    parser = Lark.open("expression-ambiguous.lark", start="exp")
+    parser = Lark.open("expression.lark", start="exp")
     ast = parser.parse(src)
 
     return evaluate(ast)

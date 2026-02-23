@@ -1,0 +1,71 @@
+// Unambiguous expression grammar with PEMDAS precedence (strong -> weak):
+// 1) PE:  **
+// 2) MD:  * / % &
+// 3) AS:  + - | xor ^
+// 4) CMP: == <
+
+?start: exp
+
+?exp: exp_cmp
+
+?exp_cmp: exp_cmp CMP exp_as   -> exp
+        | exp_as
+
+?exp_as: exp_as AS exp_md      -> exp
+       | exp_md
+
+?exp_md: exp_md MD exp_pe      -> exp
+       | exp_pe
+
+// Right-associative exponentiation: a ** b ** c = a ** (b ** c)
+?exp_pe: exp_unary PE exp_pe   -> exp
+       | exp_unary
+
+?exp_unary: UNOP exp_unary     -> exp
+          | primary
+
+?primary: INT
+        | FLOAT
+        | NAMED_CONSTANT
+        | variable
+        | BUILTIN_FUN1 "(" exp ")"           -> exp
+        | BUILTIN_FUN2 "(" exp "," exp ")"  -> exp
+        | "(" exp ")"                       -> exp
+
+variable: ID
+        | ID "[" exp "]"
+
+INT: /
+        [0-9]+              # integer (decimal)
+        | 0x[0-9a-fA-F]+    # hexadecimal
+        | 0b[01]+           # binary
+    /x
+
+FLOAT: /
+        [+-]?               # optional sign
+        [0-9]+\.[0-9]+      # decimal digits (dot required; digits on both sides)
+        (
+            e               # 'e'
+            [+-]?           # optional exponent sign
+            [0-9]+          # exponent digits (>= 1)
+        )?                  # optional exponent part
+    /x
+
+ID.-1: /[a-zA-Z][a-zA-Z0-9_]*/
+
+NAMED_CONSTANT: "pi"
+BUILTIN_FUN1: "sin" | "arcsin" | "cos" | "arccos" | "tan" | "exp" | "sqrt"
+BUILTIN_FUN2: "arctan2"
+
+// Operator groups as separate terminals (their Token.type will be PE/MD/AS/CMP)
+PE:  "**"
+MD:  "*" | "/" | "%" | "&"
+AS:  "+" | "-" | "|" | "xor" | "^"
+CMP: "==" | "<"
+
+UNOP: "!" | "not"   // logical negation
+    | "~"           // bitwise negation
+    | "-"           // unary minus
+
+WHITESPACE: /[\ \t\n\r\f]+/
+%ignore WHITESPACE
