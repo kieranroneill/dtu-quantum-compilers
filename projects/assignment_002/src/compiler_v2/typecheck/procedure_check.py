@@ -1,36 +1,51 @@
+import logging
+
 from lark import Token, Tree
-from libs.errors.compile_error import CompileError
+from libs.utilities.exit_code import ExitCode
 
 from .type_state import TypeState
 
 
-def procedure_check(proc: Tree[Token], state: TypeState) -> None:
+def procedure_check(procedure: Tree[Token], state: TypeState) -> int:
     """
     Type-check a single procedure declaration.
 
-    For now we only validate the shape and set up the hook for later work.
+    Args:
+        procedure (Tree[Token]):
+        state (TypeState): The state of the current compilation. This includes the symbol and type tables.
+
+    Returns:
+        int: The exit code indicating the success or failure of the type check.
     """
-    if not isinstance(proc, Tree) or str(proc.data) != "procedure":
-        raise CompileError(f"Expected 'procedure' node, got {getattr(proc, 'data', type(proc))}")
+    if not isinstance(procedure, Tree) or str(procedure.data) != "procedure":
+        logging.error(f"expected \"procedure\" node, got {getattr(procedure, 'data', type(procedure))}")
+
+        return ExitCode.TYPE_ERROR
 
     # Expected shape (based on your grammar_v2): ID "(" parameter_declarations ")" statement
     # After parsing, punctuation usually doesn't show up in the tree, so children are commonly:
     #   [ID, parameter_declarations, statement]
-    children = proc.children
+    children = procedure.children
     if len(children) < 3:
-        raise CompileError(f"Unexpected procedure shape (children={len(children)}). Expected at least 3.")
+        logging.error(f"unexpected procedure shape (children={len(children)}), expected at least 3")
+
+        return ExitCode.TYPE_ERROR
 
     name_token = children[0]
     params_node = children[1]
     body_stmt = children[2]
 
     if not isinstance(name_token, Token) or name_token.type != "ID":
-        raise CompileError("Procedure name must be an ID token")
+        logging.error("procedure name must be an ID token")
+
+        return ExitCode.TYPE_ERROR
 
     if not isinstance(params_node, Tree) or str(params_node.data) != "parameter_declarations":
-        raise CompileError("Expected 'parameter_declarations' node in procedure")
+        logging.error('expected "parameter_declarations" node in procedure')
+
+        return ExitCode.TYPE_ERROR
 
     # Hook: later you will iterate params_node.children and populate state.env/state.tenv
     # Hook: later you will typecheck body_stmt
     # For now, just succeed if it parses.
-    return None
+    return ExitCode.SUCCESS
