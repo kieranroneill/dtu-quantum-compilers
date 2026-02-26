@@ -1,6 +1,5 @@
-import logging
-
 from lark import Token, Tree
+from libs import logging
 from libs.utilities.exit_code import ExitCode
 
 from .procedure_check import procedure_check
