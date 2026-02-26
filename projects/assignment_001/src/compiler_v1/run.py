@@ -12,7 +12,7 @@ def run(src: str) -> int | float:
     Returns:
         int | float: The result of the parsed expression.
     """
-    parser = Lark.open("expression.lark", rel_to=__file__, start="exp")
-    ast = parser.parse(src)
+    _lark = Lark.open("grammar_v1.lark", rel_to=__file__, start="exp")
+    ast = _lark.parse(src)
 
     return evaluate(ast)

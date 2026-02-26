@@ -16,7 +16,7 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["interpreter_v1*"]
+include = ["compiler_v1*"]
 
 [tool.setuptools.package-data]
-interpreter_v1 = ["*.lark"]
+compiler_v1 = ["*.lark"]

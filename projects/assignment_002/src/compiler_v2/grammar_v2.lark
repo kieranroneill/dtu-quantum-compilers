@@ -1,4 +1,4 @@
-%import .expression (INT, FLOAT, BUILTIN_FUN1, BUILTIN_FUN2, NAMED_CONSTANT, PE,MD,AS,CMP, ID,  exp, exp1, exp2, exp3, exp4,lval)
+%import .grammar_v1 (INT, FLOAT, BUILTIN_FUN1, BUILTIN_FUN2, NAMED_CONSTANT, PE,MD,AS,CMP, ID,  exp, exp1, exp2, exp3, exp4)
 
 // A program is a sequence of procedure declarations. The first procedure is the entry point (like 'main' in C/C++).
 program: procedure+
@@ -19,7 +19,7 @@ statement:  lval EQ exp ";" // Assignment
 |           MEASURE lval "->" lval ";"
 |           IF "(" exp ")" statement "else" statement
 |           WHILE "(" exp ")" statement
-|           block 
+|           block
 
 
 
@@ -27,14 +27,18 @@ statement:  lval EQ exp ";" // Assignment
 // or an initialized scalar variable, or an initialized array.
 declaration: TYPE lval ";" | TYPE ID "=" exp ";" | TYPE ID "[" INT "]" "=" "{" exps "}" ";"
 
+// l-values (assignment targets / variable references in statements)
+lval: ID
+    | ID "[" exp "]"
+
 //type:  INT_TYPE | FLOAT_TYPE | CBIT_TYPE | QBIT_TYPE
 TYPE: "int" | "float" | "cbit" | "qbit"
 
-qupdate:        gate lval | lval SWAP lval 
-block:          "{" declarations statements "}" 
+qupdate:        gate lval | lval SWAP lval
+block:          "{" declarations statements "}"
 procedure_call: "call" ID "(" lvals ")"
-gate: NOT | H | rgate "(" exp ")" 
-rgate: /(R[xyz]|P)/ 
+gate: NOT | H | rgate "(" exp ")"
+rgate: /(R[xyz]|P)/
 
 SWAP: "<>" | "swap"
 NOT: "not"
