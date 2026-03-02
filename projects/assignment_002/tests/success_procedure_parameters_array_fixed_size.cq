@@ -1,0 +1,1 @@
+initialize(cbit c[0], float x[4], qbit q[2], int a[1]) {}

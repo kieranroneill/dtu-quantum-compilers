@@ -2,6 +2,7 @@ from importlib import resources
 
 from lark import Lark
 from libs import logging
+from libs.errors import CompileError, TypeCheckError
 from libs.utilities.exit_code import ExitCode
 
 from . import typecheck
@@ -24,10 +25,21 @@ def run(src: str) -> int:
         start="program",
     )
     ast = _lark.parse(src)
+    symbol_table = [{}]
 
-    exit_code = typecheck.program_check(ast)
+    try:
+        symbol_table = typecheck.program_check(ast, symbol_table)
+    except Exception as e:
+        if isinstance(e, CompileError):
+            return ExitCode.COMPILE_ERROR
 
-    if exit_code == ExitCode.SUCCESS:
-        logging.info("✅ successfully compiled program")
+        if isinstance(e, TypeCheckError):
+            return ExitCode.TYPE_CHECK_ERROR
 
-    return exit_code
+        logging.error(e)
+
+        return ExitCode.PARSE_ERROR
+
+    logging.info("✅ successfully compiled program")
+
+    return ExitCode.SUCCESS

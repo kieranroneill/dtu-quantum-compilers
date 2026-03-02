@@ -1,42 +1,49 @@
 from lark import Token, Tree
 from libs import logging
-from libs.utilities.exit_code import ExitCode
+from libs.errors import TypeCheckError
 
-from .type_state import TypeState
+from .parameter_declarations_check import parameter_declarations_check
+from .symbols import BaseSymbol
 
 
-def procedure_check(procedure: Tree[Token], state: TypeState) -> int:
+def procedure_check(procedure: Tree, symbol_table: list[dict[str, BaseSymbol]]) -> list[dict[str, BaseSymbol]]:
     """
-    Type-check a single procedure declaration.
+    Type-check a single procedure.
+
+    Lark grammar: ID "(" parameter_declarations ")" statement
 
     Args:
-        procedure (Tree[Token]):
-        state (TypeState): The state of the current compilation. This includes the symbol and type tables.
+        procedure (Tree): The procedure node to type-check.
+        symbol_table (list[dict(str, BaseSymbol)]): A list of symbol tables, where each index is a scope level containing the symbols for that level. The symbol is a key/value pair (dict) where the key is the symbol name and the value is the symbol detail.
 
     Returns:
-        int: The exit code indicating the success or failure of the type check.
+        list[dict[str, BaseSymbol]]: An updated symbol table with a copied entry for the current and nested scopes, all outer scopes remain unchanged with original references preserved.
+
+    Raises:
+        TypeCheckError: If the "procedure" fails the type check.
     """
     if not isinstance(procedure, Tree) or str(procedure.data) != "procedure":
-        logging.error(f"expected \"procedure\" node, got {getattr(procedure, 'data', type(procedure))}", procedure.meta)
+        logging.error(f"expected \"procedure\" node, got {getattr(procedure, 'data', type(procedure))}", procedure)
 
-        return ExitCode.TYPE_ERROR
+        raise TypeCheckError()
 
-    # grammar: ID "(" parameter_declarations ")" statement
     children = procedure.children
 
     if len(children) < 3:
-        logging.error(
-            f'invalid procedure shape, expected ["ID", "parameter_declarations", "statement"]', procedure.meta
-        )
+        logging.error(f'invalid procedure shape, expected ["ID", "parameter_declarations", "statement"]', procedure)
 
-        return ExitCode.TYPE_ERROR
+        raise TypeCheckError()
+
+    # <---------- "ID" check ---------->
 
     id_token = children[0]
 
     if not isinstance(id_token, Token) or id_token.type != "ID":
-        logging.error(f'procedure name must be an "ID"', id_token.meta)
+        logging.error(f'procedure name must be an "ID"', id_token)
 
-        return ExitCode.TYPE_ERROR
+        raise TypeCheckError()
+
+    # <---------- "parameter_declarations" check ---------->
 
     parameter_declarations_node = children[1]
 
@@ -44,10 +51,14 @@ def procedure_check(procedure: Tree[Token], state: TypeState) -> int:
         not isinstance(parameter_declarations_node, Tree)
         or str(parameter_declarations_node.data) != "parameter_declarations"
     ):
-        logging.error('expected "parameter_declarations" node in procedure', parameter_declarations_node.meta)
+        logging.error('expected "parameter_declarations" node in procedure', parameter_declarations_node)
 
-        return ExitCode.TYPE_ERROR
+        raise TypeCheckError()
+
+    _symbol_table = parameter_declarations_check(parameter_declarations_node, symbol_table)
+
+    # <---------- "statement" check ---------->
 
     statement_node = children[2]
 
-    return ExitCode.SUCCESS
+    return _symbol_table
