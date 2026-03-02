@@ -3,6 +3,7 @@ from libs import logging
 from libs.errors import TypeCheckError
 
 from .parameter_declarations_check import parameter_declarations_check
+from .statement_check import statement_check
 from .symbols import BaseSymbol
 
 
@@ -45,20 +46,8 @@ def procedure_check(procedure: Tree, symbol_table: list[dict[str, BaseSymbol]]) 
 
     # <---------- "parameter_declarations" check ---------->
 
-    parameter_declarations_node = children[1]
-
-    if (
-        not isinstance(parameter_declarations_node, Tree)
-        or str(parameter_declarations_node.data) != "parameter_declarations"
-    ):
-        logging.error('expected "parameter_declarations" node in procedure', parameter_declarations_node)
-
-        raise TypeCheckError()
-
-    _symbol_table = parameter_declarations_check(parameter_declarations_node, symbol_table)
+    _symbol_table = parameter_declarations_check(children[1], symbol_table)
 
     # <---------- "statement" check ---------->
 
-    statement_node = children[2]
-
-    return _symbol_table
+    return statement_check(children[2], _symbol_table)

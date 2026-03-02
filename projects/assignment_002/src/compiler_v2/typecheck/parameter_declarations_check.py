@@ -14,7 +14,7 @@ from .symbols import (
 
 
 def parameter_declarations_check(
-    parameters: Tree, symbol_table: list[dict[str, BaseSymbol]]
+    parameter_declarations_node: Tree, symbol_table: list[dict[str, BaseSymbol]]
 ) -> list[dict[str, BaseSymbol]]:
     """
     Type-check the parameters of a procedure.
@@ -22,7 +22,7 @@ def parameter_declarations_check(
     Lark grammar: TYPE ID | TYPE ID "[" (ID | INT) "]"
 
     Args:
-        parameters (Tree): The parameters node to type-check.
+        parameter_declarations_node (Tree): The parameters node to type-check.
         symbol_table (list[dict(str, BaseSymbol)]): A list of symbol tables, where each index is a scope level containing the symbols for that level. The symbol is a key/value pair (dict) where the key is the symbol name and the value is the symbol detail.
 
     Returns:
@@ -31,10 +31,18 @@ def parameter_declarations_check(
     Raises:
         TypeCheckError: If the "parameter_declaration" failed the type check.
     """
+    if (
+        not isinstance(parameter_declarations_node, Tree)
+        or str(parameter_declarations_node.data) != "parameter_declarations"
+    ):
+        logging.error('expected "parameter_declarations" node in procedure', parameter_declarations_node)
+
+        raise TypeCheckError()
+
     _symbol_table = symbol_table.copy()  # shallow copy the scopes
     _symbol_table[-1] = symbol_table[-1].copy()  # copy the current scope so we don't mutate in place
 
-    for parameter in parameters.children:
+    for parameter in parameter_declarations_node.children:
         if not isinstance(parameter, Tree) or str(parameter.data) != "parameter_declaration":
             logging.error('expected "parameter_declaration" node', parameter)
 

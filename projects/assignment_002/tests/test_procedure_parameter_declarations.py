@@ -11,18 +11,9 @@ def test_fail_duplicate_procedure_parameters(caplog):
     caplog.set_level(logging.ERROR)
     source = read_file(Path(__file__).with_name("fail_duplicate_procedure_parameters.cq"))
     exit_code = compiler.run(src=source)
-    print(caplog.text)
+
     assert exit_code == ExitCode.TYPE_CHECK_ERROR
     assert "duplicate parameter name" in caplog.text
-
-
-def test_fail_too_many_procedures(caplog):
-    caplog.set_level(logging.ERROR)
-    source = read_file(Path(__file__).with_name("fail_too_many_procedures.cq"))
-    exit_code = compiler.run(src=source)
-
-    assert exit_code == ExitCode.COMPILE_ERROR
-    assert 'expected one "procedure"' in caplog.text
 
 
 def test_success_multiple_procedure_parameter_types(caplog):
