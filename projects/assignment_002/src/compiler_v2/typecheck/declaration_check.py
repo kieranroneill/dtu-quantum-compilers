@@ -3,13 +3,8 @@ from libs import logging
 from libs.errors import TypeCheckError
 
 from .lval_check import lval_check
-from .symbols import (
-    BaseSymbol,
-    CBitSymbol,
-    FloatSymbol,
-    IntSymbol,
-    QBitSymbol,
-)
+from .symbols import BaseSymbol
+from .utilities import symbol_of
 
 
 def declaration_check(node: Tree, symbol_table: list[dict[str, BaseSymbol]]) -> list[dict[str, BaseSymbol]]:
@@ -52,21 +47,14 @@ def declaration_check(node: Tree, symbol_table: list[dict[str, BaseSymbol]]) -> 
             raise TypeCheckError()
 
         type_token = node.children[0]
-        _type = str(type_token.value)
+        symbol = symbol_of(type_token)
 
-        match _type:
-            case "cbit":
-                _symbol_table[-1][name] = CBitSymbol()
-            case "float":
-                _symbol_table[-1][name] = FloatSymbol()
-            case "int":
-                _symbol_table[-1][name] = IntSymbol()
-            case "qbit":
-                _symbol_table[-1][name] = QBitSymbol()
-            case _:
-                logging.error(f'unsupported parameter type "{_type}"', type_token)
+        if symbol is None:
+            logging.error(f'unsupported parameter type "{str(type_token.value)}"', type_token)
 
-                raise TypeCheckError()
+            raise TypeCheckError()
+
+        _symbol_table[-1][name] = symbol
 
         return _symbol_table
 

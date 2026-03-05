@@ -2,15 +2,8 @@ from lark import Token, Tree
 from libs import logging
 from libs.errors import TypeCheckError
 
-from .symbols import (
-    ArrayReferenceSymbol,
-    ArraySymbol,
-    BaseSymbol,
-    CBitSymbol,
-    FloatSymbol,
-    IntSymbol,
-    QBitSymbol,
-)
+from .symbols import BaseSymbol
+from .utilities import symbol_of
 
 
 def parameter_declarations_check(
@@ -77,37 +70,13 @@ def parameter_declarations_check(
 
             raise TypeCheckError()
 
-        # if there is a third child, it is an array declaration, i.e. [TYPE, ID, -> (ID | INT)]
-        if len(children) > 2:
-            array_ref_token = children[2]
+        symbol = symbol_of(parameter)
 
-            if isinstance(array_ref_token, Token):
-                if array_ref_token.type == "INT":
-                    _symbol_table[-1][name] = ArraySymbol(_type, int(array_ref_token.value))
-
-                    continue
-
-                if array_ref_token.type == "ID":
-                    _symbol_table[-1][name] = ArrayReferenceSymbol(_type, str(array_ref_token.value))
-
-                    continue
-
-            logging.error('array reference must be an "ID" or "INT" token', array_ref_token)
+        if symbol is None:
+            logging.error(f'unsupported parameter type "{_type}"', type_token)
 
             raise TypeCheckError()
 
-        match _type:
-            case "cbit":
-                _symbol_table[-1][name] = CBitSymbol()
-            case "float":
-                _symbol_table[-1][name] = FloatSymbol()
-            case "int":
-                _symbol_table[-1][name] = IntSymbol()
-            case "qbit":
-                _symbol_table[-1][name] = QBitSymbol()
-            case _:
-                logging.error(f'unsupported parameter type "{_type}"', type_token)
-
-                raise TypeCheckError()
+        _symbol_table[-1][name] = symbol
 
     return _symbol_table

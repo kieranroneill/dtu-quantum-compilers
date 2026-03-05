@@ -3,6 +3,7 @@ from libs import logging
 from libs.errors import TypeCheckError
 
 from .block_check import block_check
+from .exp_check import exp_check
 from .lval_check import lval_check
 from .symbols import BaseSymbol
 from .utilities import lookup_symbol_by_name
@@ -36,7 +37,7 @@ def statement_check(node: Tree, symbol_table: list[dict[str, BaseSymbol]]) -> li
 
         raise TypeCheckError()
 
-    # grammar form:  lval EQ exp ";"
+    # grammar form: lval EQ exp ";"
     if (
         len(node.children) == 3
         and isinstance(node.children[0], Tree)
@@ -50,15 +51,24 @@ def statement_check(node: Tree, symbol_table: list[dict[str, BaseSymbol]]) -> li
 
         lval_check(lval_node)
 
-        name = lval_node.value
-        symbol = lookup_symbol_by_name(lval_node.value)
+        lval_name = lval_node.value
+        lval_symbol = lookup_symbol_by_name(lval_name, symbol_table)
 
-        if symbol is None:
-            logging.error(f'undefined variable "{name}"', lval_node)
+        if lval_symbol is None:
+            logging.error(f'undefined variable "{lval_name}"', lval_node)
+
+            raise TypeCheckError()
+
+        if lval_symbol.symbol == "qbit":
+            logging.error('"qbit" type is not allowed to be assignment target', lval_node)
 
             raise TypeCheckError()
 
         exp_node = node.children[2]
+
+        exp_check(exp_node, symbol_table)
+
+        return symbol_table
 
     # grammar: block
     if len(node.children) == 1 and isinstance(node.children[0], Tree) and str(node.children[0].data) == "block":
@@ -66,6 +76,6 @@ def statement_check(node: Tree, symbol_table: list[dict[str, BaseSymbol]]) -> li
 
     # TODO: implement other grammar forms for "statement" here
 
-    logging.error("invalid declaration form", node)
+    logging.error("invalid statement form", node)
 
     raise TypeCheckError()
