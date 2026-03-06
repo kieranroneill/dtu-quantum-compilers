@@ -9,6 +9,5 @@ class BaseSymbol:
     def __init__(self, symbol: str) -> None:
         self._symbol = symbol
 
-    @property
     def symbol(self) -> str:
         return self._symbol

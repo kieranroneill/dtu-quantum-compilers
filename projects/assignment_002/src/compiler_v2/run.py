@@ -5,7 +5,7 @@ from libs import logging
 from libs.errors import CompileError, TypeCheckError
 from libs.utilities.exit_code import ExitCode
 
-from . import typecheck
+from .typecheck import TypeChecker
 
 
 def run(src: str) -> int:
@@ -21,14 +21,15 @@ def run(src: str) -> int:
     _lark = Lark.open(
         "grammar_v2.lark",
         import_paths=[str(resources.files("compiler_v1"))],  # get the grammar rules from the v1 compiler
+        propagate_positions=True,
         rel_to=__file__,
         start="program",
     )
     ast = _lark.parse(src)
-    symbol_table = [{}]
+    type_checker = TypeChecker()
 
     try:
-        symbol_table = typecheck.program_check(ast, symbol_table)
+        type_checker.program_check(ast)
     except Exception as e:
         if isinstance(e, CompileError):
             return ExitCode.COMPILE_ERROR
@@ -37,6 +38,7 @@ def run(src: str) -> int:
             return ExitCode.TYPE_CHECK_ERROR
 
         logging.error(e)
+        print(ast.pretty())
 
         return ExitCode.PARSE_ERROR
 

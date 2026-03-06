@@ -10,7 +10,7 @@ def log(message: str, level: int = int, leaf: lark.Tree | lark.Token | None = No
         _message = f"{message}:{leaf.end_line}:{leaf.end_column}"
 
     if isinstance(leaf, lark.Tree):
-        _message = f"{message}{leaf.meta.line}:{leaf.meta.column}"
+        _message = f"{message}:{leaf.meta.line}:{leaf.meta.column}"
 
     match level:
         case logging.CRITICAL:
