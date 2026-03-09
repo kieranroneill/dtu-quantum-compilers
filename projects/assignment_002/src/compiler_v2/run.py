@@ -29,6 +29,7 @@ def run(src: str) -> int:
     type_checker = TypeChecker()
 
     try:
+        logging.debug(ast)
         type_checker.program_check(ast)
     except Exception as e:
         if isinstance(e, CompileError):

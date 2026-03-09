@@ -155,12 +155,15 @@ class TypeChecker:
         """
         self._check_node(node, "declaration")
 
-        # grammar: TYPE lval ";"
-        if len(node.children) >= 2 and isinstance(node.children[0], Token) and node.children[0].type == "TYPE":
-
+        # grammar form: TYPE lval ";"
+        if (
+            len(node.children) == 2
+            and isinstance(node.children[0], Token)
+            and node.children[0].type == "TYPE"
+            and isinstance(node.children[1], Tree)
+            and str(node.children[1].data) == "lval"
+        ):
             lval_node = node.children[1]
-
-            self.lval_check(lval_node)
 
             name = str(lval_node.children[0].value)
 
@@ -176,6 +179,40 @@ class TypeChecker:
                 logging.error(f'unsupported parameter type "{str(type_token.value)}"', type_token)
 
                 raise TypeCheckError()
+
+            self.symbol_table[-1][name] = symbol
+
+            return None
+
+        # grammar: TYPE ID "=" exp ";"
+        if (
+            len(node.children) == 3
+            and isinstance(node.children[0], Token)
+            and node.children[0].type == "TYPE"
+            and isinstance(node.children[1], Token)
+            and node.children[1].type == "ID"
+            and isinstance(node.children[2], Tree)
+            and node.children[2].data == "exp"
+        ):
+            type_token = node.children[0]
+            symbol = self._symbol_by_type(type_token)
+
+            if symbol is None:
+                logging.error(f'unsupported parameter type "{str(type_token.value)}"', type_token)
+
+                raise TypeCheckError()
+
+            id_token = node.children[1]
+            name = str(id_token.value)
+
+            if name in self.symbol_table[-1]:
+                logging.error(f'duplicate declaration name "{name}" in the same scope', id_token)
+
+                raise TypeCheckError()
+
+            exp_node = node.children[2]
+
+            self.exp_check(exp_node)
 
             self.symbol_table[-1][name] = symbol
 

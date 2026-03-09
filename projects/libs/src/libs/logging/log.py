@@ -18,7 +18,7 @@ def log(message: str, level: int = int, leaf: lark.Tree | lark.Token | None = No
         case logging.DEBUG:
             logging.debug(_message)
         case logging.ERROR:
-            logging.error(_message)
+            logging.error(_message, exc_info=True)
         case logging.FATAL:
             logging.fatal(_message)
         case logging.INFO:
